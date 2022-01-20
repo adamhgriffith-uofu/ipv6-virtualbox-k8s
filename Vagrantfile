@@ -24,6 +24,14 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
+  # Avoid updating the guest additions if the user has the plugin installed:
+#   if Vagrant.has_plugin?("vagrant-vbguest")
+#     config.vbguest.auto_update = false
+#   end
+
+  # Necessary for mounts (see https://www.puppeteers.net/blog/fixing-vagrant-vbguest-for-the-centos-7-base-box/).
+  config.vbguest.installer_options = { allow_kernel_upgrade: true }
+
   # Display a note when running the machine.
   config.vm.post_up_message = "Remember, switch to root shell before running K8s commands!"
 
@@ -37,12 +45,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.define server['name'] do |node|
 
-      # Specify the Vagrant Box, version, and update check:
-      node.vm.box = "rockylinux/8"
-      node.vm.box_version = "4.0.0"
-      node.vm.box_check_update = "false"
-
-      # Specify the hostname
+      node.vm.box = "centos/7"
       node.vm.hostname = server['name']
 
       # Create a bridged network adaptor (for IPv6).
