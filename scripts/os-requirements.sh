@@ -38,7 +38,7 @@ cat <<EOF > /etc/sysctl.d/02-fwd.conf
 net.ipv6.conf.all.forwarding=1
 EOF
 
-echo "Configuring eth2..."
+echo "Configuring eth1..."
 cat <<EOF > /etc/sysconfig/network-scripts/ifcfg-eth1
 TYPE=Ethernet
 PROXY_METHOD=none
