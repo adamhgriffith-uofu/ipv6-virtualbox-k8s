@@ -55,3 +55,11 @@ vagrant destroy -f
 See [Vagrant: Destroy](https://www.vagrantup.com/docs/cli/destroy) for additional information.
 
 ## References
+
+* [GitHub: sgryphon/kubernetes-ipv6 ](https://github.com/sgryphon/kubernetes-ipv6)
+* [Customizing components with the kubeadm API](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/control-plane-flags/)
+* [IPv4/IPv6 dual-stack](https://kubernetes.io/docs/concepts/services-networking/dual-stack/#enable-ipv4-ipv6-dual-stack)
+* [Dual-stack support with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/dual-stack-support/)
+* [Calico: Configure dual stack or IPv6 only](https://projectcalico.docs.tigera.io/networking/ipv6)
+* [Calico: IP autodetection methods](https://projectcalico.docs.tigera.io/reference/node/configuration#ip-autodetection-methods)
+* [kubeadm Configuration (v1beta3) Overview](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)

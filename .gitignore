@@ -1,0 +1,6 @@
+
+# Vagrant Meta
+.vagrant
+
+# Local Files
+servers.yml
