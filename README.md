@@ -29,7 +29,8 @@ See [Virtual Box](https://www.virtualbox.org/) for download and installation ins
 1. Update the name of the bridged adaptor in the `Vagrantfile` to match the host.
 2. Copy `/<repo-location>/servers.yml.tmpl` to `/<repo-location>/servers.yml` and modify as needed.
    * The first entry will be applied to the control-plane and the remainder to the worker nodes.
-   * **Note:** If a single entry is specified only the control-plane will be created.
+   * If a single entry is specified only the control-plane will be created.
+   * **Important:** All entries must be internet routable.
 3. Bring up the virtual machines:
 
    ```shell
