@@ -140,7 +140,7 @@ controlPlane:
     bindPort: 6443
 discovery:
   bootstrapToken:
-    apiServerEndpoint: ${IPV6_ADDR}:6443
+    apiServerEndpoint: "[${IPV6_ADDR}]:6443"
     token: "${K8_TOKEN}"
     caCertHashes:
     - "sha256:${K8_DISCO_CERT}"
