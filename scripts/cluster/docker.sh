@@ -30,5 +30,8 @@ cat <<EOF | sudo tee /etc/docker/daemon.json
 }
 EOF
 
+#   "fixed-cidr-v6": "fc00:db8:1234:5678:8:2::/104",
+  #  "ipv6": true,
+
 echo "Enabling Docker through systemctl..."
 systemctl enable --now docker

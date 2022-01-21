@@ -16,7 +16,7 @@ localAPIEndpoint:
   advertiseAddress: ${IPV6_ADDR}
 nodeRegistration:
   criSocket: /var/run/dockershim.sock
-  name: node0001
+  name: ${HOSTNAME}
   kubeletExtraArgs:
     cluster-dns: fc00:db8:1234:5678:8:3:0:a
     node-ip: ${IPV6_ADDR}
@@ -66,6 +66,64 @@ cp -i "/etc/kubernetes/admin.conf" "$HOME/.kube/config"
 chown $(id -u):$(id -g) "$HOME/.kube/config"
 
 echo "Creating Pod network via Calico..."
+cat <<EOF > /tmp/calico-config.yml
+# Source: calico/templates/calico-config.yaml
+# This ConfigMap is used to configure a self-hosted Calico installation.
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: calico-config
+  namespace: kube-system
+data:
+  # Typha is disabled.
+  typha_service_name: "none"
+  # Configure the backend to use.
+  calico_backend: "bird"
+
+  # Configure the MTU to use for workload interfaces and tunnels.
+  # By default, MTU is auto-detected, and explicitly setting this field should not be required.
+  # You can override auto-detection by providing a non-zero value.
+  veth_mtu: "0"
+
+  # The CNI network configuration to install on each node. The special
+  # values in this config will be automatically populated.
+  cni_network_config: |-
+    {
+      "name": "k8s-pod-network",
+      "cniVersion": "0.3.1",
+      "plugins": [
+        {
+          "type": "calico",
+          "log_level": "info",
+          "log_file_path": "/var/log/calico/cni/cni.log",
+          "datastore_type": "kubernetes",
+          "nodename": "${HOSTNAME}",
+          "mtu": 1500,
+          "ipam": {
+              "type": "calico-ipam",
+              "assign_ipv4": "false",
+              "assign_ipv6": "true"
+          },
+          "policy": {
+              "type": "k8s"
+          },
+          "kubernetes": {
+              "kubeconfig": "/etc/kubernetes/admin.conf"
+          }
+        },
+        {
+          "type": "portmap",
+          "snat": true,
+          "capabilities": {"portMappings": true}
+        },
+        {
+          "type": "bandwidth",
+          "capabilities": {"bandwidth": true}
+        }
+      ]
+    }
+EOF
+kubectl apply -f /tmp/calico-config.yml
 kubectl apply -f /vagrant/resources/manifests/calico.yml
 #kubectl apply -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
 #kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
