@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
         }
         script.path = "./scripts/cluster/kubernetes.sh"
       end
-      if index < 2
+      if index < 1
         # The control-plane (a.k.a. master) node.
         node.vm.provision "shell" do |script|
           script.env = {
