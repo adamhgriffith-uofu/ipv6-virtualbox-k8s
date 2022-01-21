@@ -4,13 +4,13 @@
 set -euo pipefail
 
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-echo "~ Configure Kubernetes Master Node                                                ~"
+echo "~ Configure Kubernetes Control Plane                                              ~"
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 echo "Initializing the Kubernetes cluster with Kubeadm.."
 kubeadm config images pull
 cat << EOF > /tmp/kubeadm-config.yml
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: ${IPV6_ADDR}
@@ -27,7 +27,7 @@ apiServer:
     bind-address: '::'
     etcd-servers: https://[${IPV6_ADDR}]:2379
     service-cluster-ip-range: fc00:db8:1234:5678:8:3::/112
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 controllerManager:
   extraArgs:
     allocate-node-cidrs: 'true'

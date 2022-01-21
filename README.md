@@ -1,6 +1,6 @@
 # VirtualBox and IPv6 Kubernetes
 
-Tools to create IPv6 K8s with VirtualBox.
+Tools to create IPv6 K8s with VirtualBox and unique local addresses for workloads.
 
 ## Requirements
 
