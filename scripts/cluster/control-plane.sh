@@ -128,10 +128,19 @@ kubectl apply -f /vagrant/resources/manifests/calico.yml
 #kubectl apply -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
 #kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
 
-echo "Creating new cluster join script..."
-touch /vagrant_work/join.sh
-chmod +x /vagrant_work/join.sh
-kubeadm token create --print-join-command > /vagrant_work/join.sh
+echo "Creating portion of new cluster join config..."
+K8_TOKEN=$(kubeadm token create)
+K8_DISCO_CERT=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
+cat <<EOF > /vagrant_work/join-config.yml.part
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "[${IPV6_ADDR}]:6443"
+    token: "${K8_TOKEN}"
+    caCertHashes:
+    - "sha256:${K8_DISCO_CERT}"
+EOF
 
 #echo "Creating load-balancing via MetalLB..."
 #kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v${METALLB_VERSION}/manifests/namespace.yaml
