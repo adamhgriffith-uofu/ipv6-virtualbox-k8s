@@ -134,10 +134,6 @@ K8_DISCO_CERT=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rs
 cat <<EOF > /vagrant_work/join-config.yml.part
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: JoinConfiguration
-controlPlane:
-  localAPIEndpoint:
-    advertiseAddress: ${IPV6_ADDR}
-    bindPort: 6443
 discovery:
   bootstrapToken:
     apiServerEndpoint: "[${IPV6_ADDR}]:6443"
