@@ -100,11 +100,16 @@ Vagrant.configure("2") do |config|
             IPV6_ADDR: server['ipv6'],
             METALLB_VERSION:ENV['METALLB_VERSION']
           }
-          script.path = "./scripts/cluster/master.sh"
+          script.path = "./scripts/cluster/control-plane.sh"
         end
       else
-        # The worker nodes.
-        node.vm.provision "shell", path: "./scripts/cluster/worker.sh"
+        # The worker node(s).
+        node.vm.provision "shell" do |script|
+          script.env = {
+            IPV6_ADDR: server['ipv6']
+          }
+          script.path = "./scripts/cluster/worker.sh"
+        end
       end
     end
   end
