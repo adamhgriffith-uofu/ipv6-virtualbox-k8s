@@ -128,6 +128,12 @@ kubectl apply -f /vagrant/resources/manifests/calico.yml
 #kubectl apply -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
 #kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
 
+echo "Installing calicoctl..."
+kubectl apply -f https://docs.projectcalico.org/manifests/calicoctl.yaml
+cat <<EOF >> $HOME/.bash_aliases
+alias calicoctl="kubectl exec -i -n kube-system calicoctl -- /calicoctl"
+EOF
+
 echo "Creating portion of new cluster join config..."
 K8_TOKEN=$(kubeadm token create)
 K8_DISCO_CERT=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
