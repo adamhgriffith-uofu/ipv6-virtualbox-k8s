@@ -8,12 +8,13 @@ echo "~ Configure Kubernetes Worker Node                                        
 echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 echo "Joining the cluster as a worker..."
-cp /vagrant_work/join-config.yml.part /tmp/join-config.yml
-cat <<EOF >> /tmp/join-config.yml
+JOIN_CONFIG_PATH=/vagrant_work/join-config.yml
+cp /vagrant_work/join-config.yml.part "${JOIN_CONFIG_PATH}"
+cat <<EOF >> "${JOIN_CONFIG_PATH}"
 nodeRegistration:
   criSocket: /var/run/dockershim.sock
   name: ${HOSTNAME}
   kubeletExtraArgs:
     node-ip: ${IPV6_ADDR}
 EOF
-kubeadm join --config=/tmp/join-config.yml
+kubeadm join --config="${JOIN_CONFIG_PATH}"

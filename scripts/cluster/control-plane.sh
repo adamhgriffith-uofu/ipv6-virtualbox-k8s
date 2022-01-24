@@ -62,10 +62,13 @@ kubeadm init --config=/tmp/kubeadm-config.yml
 
 echo "Enabling kubectl access for root..."
 mkdir -p "$HOME/.kube"
-cp -i "/etc/kubernetes/admin.conf" "$HOME/.kube/config"
-# TODO: Figure out why worker nodes are inappropriately needing a local copy of admin.conf.
-cp -i "/etc/kubernetes/admin.conf" "/vagrant_work/admin.conf"
+cp -i /etc/kubernetes/admin.conf "$HOME/.kube/config"
 chown $(id -u):$(id -g) "$HOME/.kube/config"
+
+echo "TEMPORARY: Copying kubeconfig (admin.conf) to /vagrant_work..."
+# TODO: Figure out why worker nodes are inappropriately needing a local copy of admin.conf.
+HACK_KUBECONFIG_PATH=/vagrant_work/admin.conf
+cp -i /etc/kubernetes/admin.conf "${HACK_KUBECONFIG_PATH}"
 
 echo "Creating Pod network via Calico..."
 cat <<EOF > /tmp/calico-config.yml
@@ -110,7 +113,7 @@ data:
               "type": "k8s"
           },
           "kubernetes": {
-              "kubeconfig": "/vagrant_work/admin.conf"
+              "kubeconfig": "${HACK_KUBECONFIG_PATH}"
           }
         },
         {
@@ -169,5 +172,5 @@ EOF
 #EOF
 #kubectl apply -f /tmp/metallb-config.yaml
 
-echo "Removing control-plane taint..."
+echo "Removing control-plane pod taint..."
 kubectl taint nodes --all node-role.kubernetes.io/master-
