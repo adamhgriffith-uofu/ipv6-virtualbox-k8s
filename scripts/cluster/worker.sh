@@ -11,6 +11,8 @@ echo "Joining the cluster as a worker..."
 cp /vagrant_work/join-config.yml.part /tmp/join-config.yml
 cat <<EOF >> /tmp/join-config.yml
 nodeRegistration:
+  criSocket: /var/run/dockershim.sock
+  name: ${HOSTNAME}
   kubeletExtraArgs:
     node-ip: ${IPV6_ADDR}
 EOF
