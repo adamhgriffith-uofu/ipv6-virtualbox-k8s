@@ -63,6 +63,8 @@ kubeadm init --config=/tmp/kubeadm-config.yml
 echo "Enabling kubectl access for root..."
 mkdir -p "$HOME/.kube"
 cp -i "/etc/kubernetes/admin.conf" "$HOME/.kube/config"
+# TODO: Figure out why worker nodes are inappropriately needing a local copy of admin.conf.
+cp -i "/etc/kubernetes/admin.conf" "/vagrant_work/admin.conf"
 chown $(id -u):$(id -g) "$HOME/.kube/config"
 
 echo "Creating Pod network via Calico..."
@@ -108,7 +110,7 @@ data:
               "type": "k8s"
           },
           "kubernetes": {
-              "kubeconfig": "/etc/kubernetes/admin.conf"
+              "kubeconfig": "/vagrant_work/admin.conf"
           }
         },
         {
@@ -167,6 +169,5 @@ EOF
 #EOF
 #kubectl apply -f /tmp/metallb-config.yaml
 
-# TODO: Put the master node taint back. This is temporary while debugging.
-echo "Temporarily removing master taint for debugging..."
+echo "Removing control-plane taint..."
 kubectl taint nodes --all node-role.kubernetes.io/master-
