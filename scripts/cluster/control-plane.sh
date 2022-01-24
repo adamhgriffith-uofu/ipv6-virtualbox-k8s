@@ -129,7 +129,7 @@ kubectl apply -f /vagrant/resources/manifests/calico.yml
 #kubectl apply -f https://docs.projectcalico.org/manifests/custom-resources.yaml
 
 echo "Installing calicoctl..."
-kubectl apply -f /vagrant/resources/manifests/calicoctl.yaml
+kubectl apply -f /vagrant/resources/manifests/calicoctl.yml
 cat <<EOF >> $HOME/.bashrc
 alias calicoctl="kubectl exec -i -n kube-system calicoctl -- /calicoctl"
 EOF
